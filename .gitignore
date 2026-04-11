@@ -1,0 +1,10 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# AITL experiment results (contains logs and potentially API keys if hardcoded)
+experiments/blind_nas_tuner/results/*.json
+
+# Keep the plot image but ignore data files
+!experiments/blind_nas_tuner/results/loss_curve.png
