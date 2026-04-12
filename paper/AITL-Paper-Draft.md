@@ -34,8 +34,8 @@ Our contributions are: (1) formalization of AITL as a unifying
 framework for closed-loop autonomous systems, (2) a taxonomy 
 connecting existing systems under shared properties, (3) empirical 
 validation via AEOS demonstrating autonomous agent stopping 
-behavior, and (4) identification of failure modes including a novel 
-Sunk-Cost Continuation mode (F6). We position AITL as a natural 
+behavior, and (4) identification of failure modes including an 
+explicit Sunk-Cost Continuation failure mode (F6). We position AITL as a natural 
 evolution of AI evaluation, suggesting scalable directions 
 infeasible under HITL constraints.
 
@@ -482,9 +482,9 @@ evaluation criteria (F3, F5).
 5. EXTERNAL CASE STUDY: AUTORESEARCH
 
 A public repository released by Andrej Karpathy documents autonomous 
-experimentation loops under the name autoresearch (GitHub, 2026). 
-We examine this system to validate AITL properties in a real-world 
-scenario not designed by the present authors.
+experimentation loops under the name autoresearch (GitHub, accessed 
+2026). We examine this system to validate AITL properties in a 
+real-world scenario not designed by the present authors.
 
 Experimental Setup:
 - Base system: nanochat — a well-tuned GPT-2 training codebase
@@ -603,7 +603,7 @@ for coding vs. a commercial, generalist cloud model.
 **Agent 1: Qwen2.5-Coder-7B (Local System)**
 - **Baseline (Iteration 1)**: Autonomously identified `RandomForest` as the optimal baseline family for obscure tabular data, achieving **80.65%** accuracy.
 - **Exploration**: Systematically tested scaling and hyperparameters.
-- **Stopping Behavior**: After 9 iterations and a slight pivot to test non-tree structures, it recognized mathematically that it had hit a ceiling. It output the `STOP` signal autonomously. 
+- **Stopping Behavior**: After 9 iterations and a slight pivot to test non-tree structures, it inferred from recent metric history that further gains were unlikely. It output the `STOP` signal autonomously. 
 - **Cost**: $0 (Local execution).
 
 **Agent 2: GPT-4o-mini (Cloud System)**
