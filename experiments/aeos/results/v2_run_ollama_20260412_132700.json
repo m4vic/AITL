@@ -1,0 +1,68 @@
+{
+  "run_id": "20260412_132700",
+  "backend": "ollama",
+  "model": "qwen2.5-coder:7b",
+  "dataset": "covtype_10k_stripped",
+  "n_features": 54,
+  "n_classes": 7,
+  "n_train": 8000,
+  "n_val": 2000,
+  "best_accuracy": 0.807,
+  "best_loss": 0.9654,
+  "best_iteration": 1,
+  "best_code": "import numpy as np\nfrom sklearn.ensemble import RandomForestClassifier\n\ndef solve(X_train, y_train, X_val, y_val):\n    clf = RandomForestClassifier(n_estimators=100, random_state=42)\n    clf.fit(X_train, y_train)\n    predictions = clf.predict(X_val)\n    return predictions",
+  "total_iterations": 6,
+  "stop_reason": "Agent autonomously stopped at iteration 6",
+  "total_time_seconds": 72.3,
+  "model_families_explored": [
+    "SVM",
+    "RandomForest"
+  ],
+  "iterations": [
+    {
+      "iteration": 1,
+      "val_accuracy": 0.807,
+      "val_loss": 0.9654,
+      "family": "RandomForest",
+      "is_best": true,
+      "time_seconds": 14.1,
+      "code": "import numpy as np\nfrom sklearn.ensemble import RandomForestClassifier\n\ndef solve(X_train, y_train, X_val, y_val):\n    clf = RandomForestClassifier(n_estimators=100, random_state=42)\n    clf.fit(X_train, y_train)\n    predictions = clf.predict(X_val)\n    return predictions"
+    },
+    {
+      "iteration": 2,
+      "val_accuracy": 0.803,
+      "val_loss": 0.9843,
+      "family": "RandomForest",
+      "is_best": false,
+      "time_seconds": 34.9,
+      "code": "import numpy as np\nfrom sklearn.model_selection import GridSearchCV\nfrom sklearn.ensemble import RandomForestClassifier\nfrom sklearn.metrics import accuracy_score\n\ndef solve(X_train, y_train, X_val, y_val):\n    # Define the model\n    model = RandomForestClassifier()\n    \n    # Set up parameter grid for GridSearchCV\n    param_grid = {\n        'n_estimators': [100, 200, 300],\n        'max_depth': [None, 10, 20, 30],\n        'min_samples_split': [2, 5, 10]\n    }\n    \n    # Initialize GridSearchCV\n    grid_search = GridSearchCV(estimator=model, param_grid=param_grid, cv=3, scoring='accuracy', n_jobs=-1)\n    \n    # Fit the model\n    grid_search.fit(X_train, y_train)\n    \n    # Get best estimator\n    best_model = grid_search.best_estimator_\n    \n    # Make predictions\n    predictions = best_model.predict(X_val)\n    \n    return predictions"
+    },
+    {
+      "iteration": 3,
+      "val_accuracy": 0.7285,
+      "val_loss": 1.3372,
+      "family": "SVM",
+      "is_best": false,
+      "time_seconds": 12.9,
+      "code": "def solve(X_train, y_train, X_val, y_val):\n    from sklearn.svm import SVC\n    \n    # Standardize features\n    from sklearn.preprocessing import StandardScaler\n    scaler = StandardScaler()\n    X_train_scaled = scaler.fit_transform(X_train)\n    X_val_scaled = scaler.transform(X_val)\n\n    # Initialize and train an SVM model\n    model = SVC(kernel='rbf', C=1.0, probability=True)\n    model.fit(X_train_scaled, y_train)\n\n    # Make predictions on the validation set\n    predictions = model.predict(X_val_scaled)\n    \n    return predictions"
+    },
+    {
+      "iteration": 4,
+      "val_accuracy": 0.8065,
+      "val_loss": 0.9677,
+      "family": "RandomForest",
+      "is_best": false,
+      "time_seconds": 5.9,
+      "code": "import numpy as np\nfrom sklearn.ensemble import RandomForestClassifier\nfrom sklearn.preprocessing import StandardScaler\n\ndef solve(X_train, y_train, X_val, y_val):\n    # Standardize features\n    scaler = StandardScaler()\n    X_train_scaled = scaler.fit_transform(X_train)\n    X_val_scaled = scaler.transform(X_val)\n\n    # Train a Random Forest Classifier\n    model = RandomForestClassifier(n_estimators=100, max_depth=None, min_samples_split=2, random_state=42)\n    model.fit(X_train_scaled, y_train)\n\n    # Make predictions on the validation set\n    predictions = model.predict(X_val_scaled)\n\n    return predictions"
+    },
+    {
+      "iteration": 5,
+      "val_accuracy": 0.7285,
+      "val_loss": 1.3372,
+      "family": "SVM",
+      "is_best": false,
+      "time_seconds": 4.2,
+      "code": "def solve(X_train, y_train, X_val, y_val):\n    from sklearn.svm import SVC\n\n    # Standardize features\n    from sklearn.preprocessing import StandardScaler\n    scaler = StandardScaler()\n    X_train_scaled = scaler.fit_transform(X_train)\n    X_val_scaled = scaler.transform(X_val)\n\n    # Train SVM with a different kernel (e.g., poly, rbf)\n    model = SVC(kernel='rbf', C=1.0, gamma='scale')\n    model.fit(X_train_scaled, y_train)\n\n    predictions = model.predict(X_val_scaled)\n    return predictions"
+    }
+  ]
+}
