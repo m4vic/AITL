@@ -50,7 +50,7 @@
 
 % ===== Abstract =====
 \begin{abstract}
-We identify and formalize AI In The Loop (AITL), a paradigm where AI systems autonomously generate, evaluate, and improve without human intervention in operational workflows. AITL extends the RLAIF principle---replacing human feedback with AI feedback---from training to the full AI system lifecycle.
+We identify and formalize AI In The Loop (AITL), a paradigm where AI systems autonomously generate, evaluate, and improve with human intervention restricted to boundary supervision rather than operational decision-making. AITL extends the RLAIF principle---replacing human feedback with AI feedback---from training to the full AI system lifecycle.
 
 Through analysis of four systems (AlphaZero, Constitutional AI, SWE-agent, autoresearch), we extract common properties and propose a unifying taxonomy: self-generation, self-evaluation, self-improvement, and human observation. We validate AITL through a controlled experiment using the Autonomous Empirical Optimization System (AEOS), a model-agnostic ML sandbox where two LLM agents autonomously built ML pipelines on a semantically-stripped dataset. In our experiment, we observe that the dominant human role in AITL shifts from iterative ML engineering ($O(n)$ per iteration) to boundary supervision ($O(1)$ per experiment).
 
@@ -85,7 +85,7 @@ Several major AI systems have independently solved this problem by removing huma
 
 \textbf{Constitutional AI} (2022): Alignment via RLAIF. AI judges AI outputs against principles with minimal human feedback, enabling scalable alignment \citep{bai2022constitutional}.
 
-\textbf{autoresearch} (Karpathy, 2026): Autonomous ML experimentation. AI modifies code, runs experiments, and evaluates results while humans review only the final output \citep{karpathy2026autoresearch}.
+\textbf{autoresearch} (Karpathy, repository accessed 2026): Autonomous ML experimentation. AI modifies code, runs experiments, and evaluates results while humans review only the final output \citep{karpathy2026autoresearch}.
 
 We propose a unifying interpretation of these systems under a common operational framework: \textbf{AI In The Loop (AITL)}.
 
@@ -169,7 +169,7 @@ While RLAIF solved training bottlenecks, evaluation workflows still rely on HITL
 
 \Cref{fig:evolution} illustrates this evolution from manual per-instance evaluation (HITL) through training-phase automation (RLHF, RLAIF) to operational-phase automation (AITL), and positions existing systems as bounded instantiations of the AITL paradigm.
 
-\begin{figure}[t]
+\begin{figure}[H]
   \centering
   \includegraphics[width=0.95\textwidth]{figures/aitl_evolution_diagram.png}
   \caption{Evolution of AI evaluation paradigms: from Human-in-the-Loop (HITL) through RLHF and RLAIF to AI-in-the-Loop (AITL). Existing systems represent bounded instantiations; AEOS is our constrained autonomous closed-loop instance.}
@@ -226,7 +226,7 @@ The system achieved comparable alignment quality to RLHF with 90\% fewer human a
 
 \subsection{autoresearch: Closed-Loop ML Experimentation (2026)}
 
-\citet{karpathy2026autoresearch} released autoresearch, a public framework where AI agents autonomously conduct ML experiments:
+A public repository released by Andrej Karpathy documents autonomous experimentation loops under the name autoresearch \citep{karpathy2026autoresearch}:
 \begin{itemize}[nosep]
   \item \emph{Self-Generating}: Agent modifies \texttt{train.py} with new hyperparameters, architectures, and optimization strategies
   \item \emph{Self-Evaluating}: Validation bits-per-byte (\texttt{val\_bpb}) provides objective scoring after each 5-minute training run
@@ -379,7 +379,7 @@ Mitigation strategies include: ensemble evaluators (F1, F2), explicit exploratio
 \section{External Case Study: autoresearch}
 \label{sec:casestudy}
 
-A public repository released by Andrej Karpathy documents autonomous experimentation loops under the name autoresearch \citep{karpathy2026autoresearch}. We examine this system to validate AITL properties in a real-world scenario not designed by the present authors.
+A public repository released by Andrej Karpathy documents autonomous experimentation loops under the name autoresearch \citep{karpathy2026autoresearch}. We examine this system to validate AITL properties in a real-world scenario not designed by the present authors. The repository was accessed in 2026.
 
 \textbf{Experimental Setup:}
 \begin{itemize}[nosep]
@@ -445,25 +445,9 @@ To ensure agents cannot simply recall known-good parameters from pre-training da
 
 \subsection{The Loop Architecture}
 
-\begin{figure}[t]
+\begin{figure}[H]
   \centering
-  \begin{lstlisting}[frame=single,basicstyle=\ttfamily\footnotesize]
-+-------------------------------------------------------------+
-|           AITL OUTER LOOP (Model Space Search)              |
-|                                                             |
-|  +----------+    +--------------+    +------------------+   |
-|  |  Agent   |--->|   Trainer    |--->|  Feedback Logger |   |
-|  |(LLM Code |    | (Sandboxed)  |    |  (JSON + Plot)   |   |
-|  | Writer)  |    |  Exec. 120s  |    |                  |   |
-|  +----------+    +--------------+    +--------+---------+   |
-|       ^                                       |             |
-|       +---------------------------------------+             |
-|                 Validation Metrics Feedback                  |
-|                                                             |
-|  Agent dynamically rules: IF no further improvement         |
-|  expected, output "STOP" to terminate the loop.             |
-+-------------------------------------------------------------+
-  \end{lstlisting}
+  \includegraphics[width=0.75\textwidth]{figures/aeos_loop_diagram.png}
   \caption{AEOS loop architecture. The agent writes model training code, receives validation metrics as feedback, and must autonomously decide when to stop.}
   \label{fig:loop}
 \end{figure}
@@ -503,14 +487,14 @@ This validation confirms the AITL properties:
 
 \subsection{The Comparative Frontier}
 
-\begin{figure}[t]
+\begin{figure}[H]
   \centering
   \includegraphics[width=0.85\textwidth]{figures/comparative_frontier.png}
   \caption{Comparative Best-So-Far discovery frontier between the two agents. The local model self-terminated upon reaching a performance plateau (9 iterations), while the cloud model continued exploration without emitting a stop signal for 28 additional iterations beyond its peak.}
   \label{fig:frontier}
 \end{figure}
 
-\Cref{fig:frontier} plots the comparative Best-So-Far discovery frontier between the two agents. The visual disparity illustrates the behavioral difference under identical AITL constraints: the local model self-terminated upon reaching a performance plateau, while the cloud model continued exploration without emitting a stop signal for 28 additional iterations beyond its peak.
+\Cref{fig:frontier} illustrates the behavioral difference under identical AITL constraints: the local model self-terminated upon reaching a performance plateau, while the cloud model continued exploration without emitting a stop signal for 28 additional iterations beyond its peak.
 
 % ===================================================================
 \section{Future Applications and Limitations}
