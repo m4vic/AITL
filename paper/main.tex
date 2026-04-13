@@ -423,7 +423,7 @@ To study a constrained autonomous closed-loop evaluation instance and address th
 
 To ensure agents cannot simply recall known-good parameters from pre-training data based on semantic context, we utilized a real-world dataset (Cover Type from UCI) with all semantic markers stripped. Features were renamed to integers, and labels were integer-mapped, reducing the problem to raw statistical discovery.
 
-\textbf{Information Withheld from Agent:} The LLM is told only: \texttt{n\_features=54}, \texttt{n\_classes=7}, \texttt{n\_train=8000}, \texttt{n\_val=2000}. No dataset name, no domain, and no feature descriptions are provided.
+\textbf{Information Withheld from Agent:} The LLM is told only: \texttt{n\_features=54}, \texttt{n\_classes=7}, \texttt{n\_train=8000}, \texttt{n\_val=2000}. No dataset name, no domain, and no feature descriptions are provided. This stripping protocol serves as a reusable evaluation methodology for future AITL experiments requiring memorization controls.
 
 \begin{table}[t]
   \centering
@@ -523,7 +523,7 @@ Scaling scientific literature review requires an AITL approach where AI systems 
 
 \subsection{Multi-Agent Council Architectures}
 
-A natural extension of AITL is the transition from single-agent loops to multi-agent council architectures for autonomous evaluation. In a council configuration, a \emph{Proposer} agent generates candidate solutions, a \emph{Critic} agent attempts to improve upon them, and a \emph{Judge} agent evaluates whether the Critic succeeded. The loop terminates when the Critic fails to improve on the Proposer's solution for $k$ consecutive rounds---replacing individual stopping heuristics with adversarial consensus. This architecture offers a potential structural mitigation for F6 (Sunk-Cost Continuation): stopping becomes a social decision rather than an individual judgment, and the adversarial dynamic provides a natural convergence signal. We identify this as a priority direction for future AEOS experiments.
+A natural extension of AITL is the transition from single-agent loops to multi-agent council architectures for autonomous evaluation. In a council configuration, a \emph{Proposer} agent generates candidate solutions, a \emph{Critic} agent attempts to improve upon them, and a \emph{Judge} agent evaluates whether the Critic succeeded. The loop terminates when the Critic fails to improve on the Proposer's solution for $k$ consecutive rounds---replacing individual stopping heuristics with adversarial consensus. This architecture offers a potential structural mitigation for F6 (Sunk-Cost Continuation): stopping becomes a social decision rather than an individual judgment, and the adversarial dynamic provides a natural convergence signal. We propose this as the primary experimental direction for AEOS~v2, with the council stopping condition replacing individual heuristics entirely.
 
 \subsection{Limitations of This Work}
 
@@ -565,7 +565,7 @@ Our AEOS experiment---the Autonomous Empirical Optimization System built to stud
 
 In these experiments, the dominant human role shifts from iterative ML engineering toward \textbf{constraint management}: defining budgets, setting stagnation limits, and monitoring aggregate metrics ($O(1)$ per experiment, not $O(n)$ per iteration).
 
-AITL suggests scalable directions for evaluation that are infeasible under HITL constraints. However, it introduces new failure modes---Sunk-Cost Continuation (F6), Evaluator Collapse (F2), and Objective Misspecification (F1)---requiring careful safety design and continued human oversight as system managers.
+AITL suggests scalable directions for evaluation that are infeasible under HITL constraints. However, it introduces new failure modes---notably Sunk-Cost Continuation (F6), a novel empirically-observed contribution of this work, alongside Evaluator Collapse (F2) and Objective Misspecification (F1)---requiring careful safety design and continued human oversight as system managers.
 
 As AI systems deploy continuously and evaluation demands grow, AITL architectures like AEOS offer a path toward scalable, autonomous evaluation pipelines. The degree to which human oversight can be safely reduced---and the precise boundaries of fully autonomous closed-loop systems---remains an open question for future work.
 
