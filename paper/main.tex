@@ -50,11 +50,11 @@
 
 % ===== Abstract =====
 \begin{abstract}
-We identify and formalize AI In The Loop (AITL), a paradigm where AI systems autonomously generate, evaluate, and improve with human intervention restricted to boundary supervision rather than operational decision-making. AITL extends the RLAIF principle---replacing human feedback with AI feedback---from training to the full AI system lifecycle.
+We identify and formalize AI In The Loop (AITL), a paradigm where AI systems autonomously generate, evaluate, and improve with human intervention restricted to boundary supervision rather than operational decision-making. AITL extends the RLAIF principle---replacing human feedback with AI feedback---from training to the full AI system lifecycle. This is a framework paper with proof-of-concept validation; we propose a unifying taxonomy rather than a benchmark study.
 
 Through analysis of four systems (AlphaZero, Constitutional AI, SWE-agent, autoresearch), we extract common properties and propose a unifying taxonomy: self-generation, self-evaluation, self-improvement, and human observation. We validate AITL through a controlled experiment using the Autonomous Empirical Optimization System (AEOS), a model-agnostic ML sandbox where two LLM agents autonomously built ML pipelines on a semantically-stripped dataset. In our experiment, we observe that the dominant human role in AITL shifts from iterative ML engineering ($O(n)$ per iteration) to boundary supervision ($O(1)$ per experiment).
 
-Our contributions are: (1)~formalization of AITL as a unifying framework for closed-loop autonomous systems, (2)~a taxonomy connecting existing systems under shared properties, (3)~empirical validation via AEOS demonstrating autonomous agent stopping behavior, and (4)~identification of failure modes including an explicit Sunk-Cost Continuation failure mode (F6). We position AITL as a natural evolution of AI evaluation, suggesting scalable directions infeasible under HITL constraints.
+Our contributions are: (1)~formalization of AITL as a unifying framework for closed-loop autonomous systems, (2)~a taxonomy connecting existing systems under shared properties, (3)~empirical validation via AEOS demonstrating autonomous agent stopping behavior, and (4)~identification of failure modes including a novel Sunk-Cost Continuation failure mode (F6), where agents continue low-yield exploration despite prolonged stagnation. We position AITL as a natural evolution of AI evaluation, suggesting scalable directions infeasible under HITL constraints.
 \end{abstract}
 
 \noindent\textbf{Keywords:} AI evaluation, closed-loop systems, autonomous ML, neural architecture search, self-improving AI
@@ -308,13 +308,13 @@ An AITL system satisfies the following:
 
 An AITL system must satisfy four properties:
 
-\textbf{P1. Self-Generating.} AI creates test inputs, prompts, or scenarios without human authorship for each instance. Formally: $G$ operates autonomously; human provides only the initial domain specification.
+\textbf{P1. Self-Generating.} AI creates test inputs, prompts, or scenarios without human authorship for each instance. Formally: $G$ operates autonomously; human provides only the initial domain specification. \emph{Exclusion:} Systems where humans author each input do not qualify.
 
-\textbf{P2. Self-Evaluating.} AI judges output quality with quantified confidence, without human labeling per instance. Formally: $E$ produces a scalar score without human annotation.
+\textbf{P2. Self-Evaluating.} AI judges output quality with quantified confidence, without human labeling per instance. Formally: $E$ produces a scalar score without human annotation. \emph{Exclusion:} Systems requiring human labels per instance do not qualify.
 
-\textbf{P3. Self-Improving.} Feedback from evaluation drives system adaptation without manual human intervention. Formally: $U$ updates $S$ based solely on $E$'s output.
+\textbf{P3. Self-Improving.} Feedback from evaluation drives system adaptation without manual human intervention. Formally: $U$ updates $S$ based solely on $E$'s output. \emph{Exclusion:} Systems requiring manual parameter updates between iterations do not qualify.
 
-\textbf{P4. Human-Observed.} Humans monitor aggregate metrics, audit periodically, and manage system constraints (e.g., API budgets, execution timeouts, safety kill-switches), but do not operate the loop continuously. Formally: Human interaction is $O(1)$ per experiment (defining success criteria, setting financial/compute bounds), rather than $O(n)$ per iteration. The human transitions from ML developer to system manager.
+\textbf{P4. Human-Observed.} Humans monitor aggregate metrics, audit periodically, and manage system constraints (e.g., API budgets, execution timeouts, safety kill-switches), but do not operate the loop continuously. Formally: Human interaction is $O(1)$ per experiment (defining success criteria, setting financial/compute bounds), rather than $O(n)$ per iteration. The human transitions from ML developer to system manager. \emph{Exclusion:} Systems with humans in the operational loop---making per-iteration decisions---do not qualify.
 
 \subsection{Requirements for AITL Success}
 
@@ -461,7 +461,7 @@ To validate the robustness of the system across different AI backends, we ran th
 \begin{itemize}[nosep]
   \item \textbf{Baseline (Iteration 1):} Autonomously identified \texttt{RandomForest} as the optimal baseline family for obscure tabular data, achieving \textbf{80.65\%} accuracy.
   \item \textbf{Exploration:} Systematically tested scaling and hyperparameters.
-  \item \textbf{Stopping Behavior:} After 9 iterations and a slight pivot to test non-tree structures, it inferred from recent metric history that further gains were unlikely. It output the \texttt{STOP} signal autonomously.
+  \item \textbf{Stopping Behavior (AI-Defined Satisfaction):} After 9 iterations and a slight pivot to test non-tree structures, the agent autonomously determined sufficiency without a human-defined threshold---it inferred from recent metric history that further gains were unlikely and output the \texttt{STOP} signal. This represents AI-defined satisfaction: the agent, not the human, decided when it was done.
   \item \textbf{Cost:} \$0 (local execution).
 \end{itemize}
 
@@ -521,13 +521,17 @@ AI agents can generate edge-case unit tests (Self-Generating), execute them agai
 
 Scaling scientific literature review requires an AITL approach where AI systems flag methodological errors or literature gaps autonomously, enabling human reviewers to focus on high-level conceptual judgments. This application carries significant risk of F1 (Objective Misspecification) if the evaluator optimizes for surface-level writing quality rather than scientific rigor.
 
+\subsection{Multi-Agent Council Architectures}
+
+A natural extension of AITL is the transition from single-agent loops to multi-agent council architectures for autonomous evaluation. In a council configuration, a \emph{Proposer} agent generates candidate solutions, a \emph{Critic} agent attempts to improve upon them, and a \emph{Judge} agent evaluates whether the Critic succeeded. The loop terminates when the Critic fails to improve on the Proposer's solution for $k$ consecutive rounds---replacing individual stopping heuristics with adversarial consensus. This architecture offers a potential structural mitigation for F6 (Sunk-Cost Continuation): stopping becomes a social decision rather than an individual judgment, and the adversarial dynamic provides a natural convergence signal. We identify this as a priority direction for future AEOS experiments.
+
 \subsection{Limitations of This Work}
 
 \textbf{Experiment scope:} Our AEOS experiment validates P3 (Self-Improving) on a single synthetic classification task. Broader validation across domains (NLP, computer vision, reinforcement learning) is required to claim generality.
 
 \textbf{Agent capabilities:} Results depend on GPT-4o-mini's code generation quality. Weaker models may require more iterations or fail to converge entirely.
 
-\textbf{Memorization vs.\ Discovery:} While we provide evidence of functional discovery through the feedback loop (\Cref{sec:aeos}), we cannot definitively prove the agent did not retrieve architectural patterns from pre-training. Stronger validation would require training an agent from scratch on non-public architecture data.
+\textbf{Memorization vs.\ Discovery:} While we provide evidence of functional discovery through the feedback loop (\Cref{sec:aeos}), we cannot definitively prove the agent did not retrieve architectural patterns from pre-training. Cover Type is a public dataset; we cannot rule out that pre-training corpora contain known-good configurations for it. Stronger validation would require private datasets with no public benchmark history, or training an agent from scratch on non-public architecture data.
 
 \textbf{Generalization:} AITL succeeds for well-defined optimization problems (game playing, architecture search, training speedup). Applicability to subjective domains (creative evaluation, novel scientific hypotheses) remains an open question.
 
