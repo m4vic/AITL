@@ -1,5 +1,5 @@
 # AITL Paper: AI In The Loop
-
+paperlink -https://zenodo.org/records/19551173 
 This repository contains the LaTeX source, documentation, and experimental Proof-of-Concept code for the research paper:
 
 **"AI In The Loop: The Evolution from Human-in-the-Loop Evaluation"**
