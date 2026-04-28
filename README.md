@@ -1,5 +1,5 @@
 # AITL Paper: AI In The Loop
-[![Zenodo research paper ](https://img.shields.io/badge/Research-paper-red?logo=google-chrome)](https://zenodo.org/records/19846960)
+[![Zenodo research paper ](https://img.shields.io/badge/Research-paper-red?logo=google-chrome)](https://zenodo.org/records/19846800)
 [![GitHub](https://img.shields.io/badge/GitHub-m4vic%2FAEOS-blue?logo=github)](https://github.com/m4vic/AEOS)
 [![Website](https://img.shields.io/badge/Website-neuralchemy.in-blue?logo=google-chrome)](https://www.neuralchemy.in/)
 
