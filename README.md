@@ -1,6 +1,7 @@
 # AITL Paper: AI In The Loop
-paperlink -https://zenodo.org/records/19551173 
-This repository contains the LaTeX source, documentation, and experimental Proof-of-Concept code for the research paper:
+[![Zenodo research paper ](https://img.shields.io/badge/Research-paper-red?logo=google-chrome)](https://zenodo.org/records/19846960)
+[![GitHub](https://img.shields.io/badge/GitHub-m4vic%2FAEOS-blue?logo=github)](https://github.com/m4vic/AEOS)
+[![Website](https://img.shields.io/badge/Website-neuralchemy.in-blue?logo=google-chrome)](https://www.neuralchemy.in/)
 
 **"AI In The Loop: The Evolution from Human-in-the-Loop Evaluation"**
 
